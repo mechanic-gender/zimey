@@ -49,10 +49,10 @@ def gameLoop():
    game_close = False
    x1 = dis_width / 2
    y1 = dis_height / 2
-   x1_change = 0
+   x1_change = 0 # Переменная скорости
    y1_change = 0
-   foodx = random.randint(20,dis_width-20)
-   foody =  random.randint(20,dis_height-20)
+   foodx = random.randint(20,dis_width-20) # Рандомизация положния яблока
+   foody = random.randint(20,dis_height-20)
 
    while not game_over:
        while game_close == True:
@@ -90,9 +90,9 @@ def gameLoop():
        x1 += x1_change
        y1 += y1_change
        dis.fill(white)
-       #if foodx-40<x1<foodx+40:
-       #    foodx = random.randint(20, dis_width - 20)
-       #    foody = random.randint(20, dis_height - 20)
+       if foodx-10<x1<foodx+10 and foody-10<y1<foody+10:
+           foodx = random.randint(20, dis_width - 20)
+           foody = random.randint(20, dis_height - 20)
 
        pygame.draw.rect(dis, blue, [foodx, foody, snake_block, snake_block])
        pygame.draw.rect(dis, black, [x1, y1, snake_block, snake_block])
