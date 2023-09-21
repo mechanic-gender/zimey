@@ -33,62 +33,63 @@ def message(msg, color):
    mesg = font_style.render(msg, True, color)
    dis.blit(mesg, [dis_width/10, dis_height/3])
 
+def game_loop():
+    is_game_over = False
+    is_game_close = False
+    x = dis_width // 2
+    y = dis_height // 2
+    x_change = 0
+    y_change = 0
+    snake_block = 10
+    food_size = 10
+    food_x = random.randint(0, (dis_width - food_size) // snake_block) * snake_block
+    food_y = random.randint(0, (dis_height - food_size) // snake_block) * snake_block
+    game_over_message = 'You lost! Press Q to quit or C to play again'
 
-def game_Loop():
-   is_game_over = False
-   is_game_close = False
-   x1 = dis_width // 2
-   y1 = dis_height // 2
-   x1_change = 0 # Переменная скорости
-   y1_change = 0
-   food_x = random.randint(20,dis_width-20) // 2 # Рандомизация положния яблока
-   food_y = random.randint(20,dis_height-20) // 2
-   game_over_message = 'Вы проиграли! Нажмите Q для выхода или C для повторной игры'
+    while not is_game_over:
+        while is_game_close:
+            dis.fill(white)
+            message(game_over_message, red)
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        is_game_over = True
+                        is_game_close = False
+                    if event.key == pygame.K_c:
+                        game_loop()
+                if event.type == pygame.QUIT:
+                    is_game_over = True
+                    is_game_close = False
 
-   while not is_game_over:
-       while is_game_close:
-           dis.fill(white)
-           message(game_over_message, red)
-           pygame.display.update()
-           for event in pygame.event.get():
-               if event.type == pygame.KEYDOWN:
-                   if event.key == pygame.K_q:
-                       is_game_over = True
-                       is_game_close = False
-                   if event.key == pygame.K_c:
-                       game_Loop()
-               if event.type == pygame.QUIT:
-                   is_game_over = True
-                   is_game_close = False
-       
-       for event in pygame.event.get():
-           if event.type == pygame.QUIT:
-               is_game_over = True
-           if event.type == pygame.KEYDOWN:
-               direction = {
-                   pygame.K_a: (-snake_block, 0),  # Move left
-                   pygame.K_d: (snake_block, 0),  # Move right
-                   pygame.K_w: (0, -snake_block),  # Move up
-                   pygame.K_s: (0, snake_block)  # Move down
-               }.get(event.key, (0, 0))
-               x1_change, y1_change = direction
-       
-       if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:
-           is_game_close = True
-       x1 += x1_change
-       y1 += y1_change
-       dis.fill(white)
-       if food_x - 10 < x1 < food_x + 10 and food_y - 10 < y1 < food_y + 10: # Check for food consumption
-           food_x = random.randint(20, dis_width - 20)
-           food_y = random.randint(20, dis_height - 20)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                is_game_over = True
+            if event.type == pygame.KEYDOWN:
+                direction = {
+                    pygame.K_a: (-snake_block, 0),  # Move left
+                    pygame.K_d: (snake_block, 0),  # Move right
+                    pygame.K_w: (0, -snake_block),  # Move up
+                    pygame.K_s: (0, snake_block)  # Move down
+                }.get(event.key, (0, 0))
+                x_change, y_change = direction
 
-       pygame.draw.rect(dis, blue, [food_x, food_y, snake_block, snake_block])
-       pygame.draw.rect(dis, black, [x1, y1, snake_block, snake_block])
-       pygame.display.update()
+        x += x_change
+        y += y_change
+        if x >= dis_width or x < 0 or y >= dis_height or y < 0:
+            is_game_close = True
+        dis.fill(white)
+        if x == food_x and y == food_y:
+            food_x = random.randint(0, (dis_width - food_size) // snake_block) * snake_block
+            food_y = random.randint(0, (dis_height - food_size) // snake_block) * snake_block
 
-       clock.tick(snake_speed)
+        pygame.draw.rect(dis, blue, [food_x, food_y, food_size, food_size])
+        pygame.draw.rect(dis, black, [x, y, snake_block, snake_block])
+        pygame.display.update()
 
-   pygame.quit()
-   quit()
+        clock.tick(snake_speed)
 
-game_Loop()
+    pygame.quit()
+    quit()
+
+game_loop()
