@@ -45,6 +45,8 @@ def game_loop():
     food_x = random.randint(0, (dis_width - food_size) // snake_block) * snake_block
     food_y = random.randint(0, (dis_height - food_size) // snake_block) * snake_block
     game_over_message = 'You lost! Press Q to quit or C to play again'
+    snake_list = []
+    snake_length = 1
 
     while not is_game_over:
         while is_game_close:
@@ -82,9 +84,23 @@ def game_loop():
         if x == food_x and y == food_y:
             food_x = random.randint(0, (dis_width - food_size) // snake_block) * snake_block
             food_y = random.randint(0, (dis_height - food_size) // snake_block) * snake_block
+            snake_length += 1
+
+        snake_head = []
+        snake_head.append(x)
+        snake_head.append(y)
+        snake_list.append(snake_head)
+        if len(snake_list) > snake_length:
+            del snake_list[0]
+
+        for segment in snake_list[:-1]:
+            if segment == snake_head:
+                is_game_close = True
+
+        for segment in snake_list:
+            pygame.draw.rect(dis, black, [segment[0], segment[1], snake_block, snake_block])
 
         pygame.draw.rect(dis, blue, [food_x, food_y, food_size, food_size])
-        pygame.draw.rect(dis, black, [x, y, snake_block, snake_block])
         pygame.display.update()
 
         clock.tick(snake_speed)
