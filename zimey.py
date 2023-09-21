@@ -34,15 +34,15 @@ def message(msg, color):
    dis.blit(mesg, [dis_width/10, dis_height/3])
 
 
-def gameLoop():
+def game_Loop():
    is_game_over = False
    is_game_close = False
-   x1 = dis_width / 2
-   y1 = dis_height / 2
+   x1 = dis_width // 2
+   y1 = dis_height // 2
    x1_change = 0 # Переменная скорости
    y1_change = 0
-   foodx = random.randint(20,dis_width-20) # Рандомизация положния яблока
-   foody = random.randint(20,dis_height-20)
+   food_x = random.randint(20,dis_width-20) // 2 # Рандомизация положния яблока
+   food_y = random.randint(20,dis_height-20) // 2
    game_over_message = 'Вы проиграли! Нажмите Q для выхода или C для повторной игры'
 
    while not is_game_over:
@@ -56,7 +56,7 @@ def gameLoop():
                        is_game_over = True
                        is_game_close = False
                    if event.key == pygame.K_c:
-                       gameLoop()
+                       game_Loop()
                if event.type == pygame.QUIT:
                    is_game_over = True
                    is_game_close = False
@@ -78,11 +78,11 @@ def gameLoop():
        x1 += x1_change
        y1 += y1_change
        dis.fill(white)
-       if foodx - 10 < x1 < foodx + 10 and foody - 10 < y1 < foody + 10: # Check for food consumption
-           foodx = random.randint(20, dis_width - 20)
-           foody = random.randint(20, dis_height - 20)
+       if food_x - 10 < x1 < food_x + 10 and food_y - 10 < y1 < food_y + 10: # Check for food consumption
+           food_x = random.randint(20, dis_width - 20)
+           food_y = random.randint(20, dis_height - 20)
 
-       pygame.draw.rect(dis, blue, [foodx, foody, snake_block, snake_block])
+       pygame.draw.rect(dis, blue, [food_x, food_y, snake_block, snake_block])
        pygame.draw.rect(dis, black, [x1, y1, snake_block, snake_block])
        pygame.display.update()
 
@@ -91,4 +91,4 @@ def gameLoop():
    pygame.quit()
    quit()
 
-gameLoop()
+game_Loop()
