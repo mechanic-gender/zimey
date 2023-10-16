@@ -42,10 +42,12 @@ snake_block = 10
 snake_speed = 15
 font_style = pygame.font.SysFont(None, 30)
 score_font=pygame.font.SysFont("comicsansms",35)
-def score(score):
+def score(score,x=10,y=10):
     v=score_font.render("ваш шёт: "+str (score),True,(255,0,0))
-    dis.blit(v,(10,10))
-
+    dis.blit(v,(x,y))
+def score1(score,x=20,y=10):
+    v=score_font.render("ваш шёт: "+str (score),True,(255,0,0))
+    dis.blit(v,(x,y))
 
 #настройки сообшений
 # def message(msg, color):
@@ -57,6 +59,10 @@ def snake (snakeblock,snakelist):#рщст змея
     for x in snakelist:
         pygame.draw.rect(dis,black,[x[0],x[1],snakeblock,snakeblock])
 
+def snake2 (snakeblock,snakelist):#рщст змея2
+    for x in snakelist:
+        pygame.draw.rect(dis,black,[x[0],x[6],snakeblock,snakeblock])
+
 def gameLoop():# основная логики змей
    game_over = False
    game_close = False
@@ -66,6 +72,11 @@ def gameLoop():# основная логики змей
    y1_change = 0
    snakelist=[]
    len_of_snake=1
+   len_of_snake1=5
+   x2=300
+   y2=300
+   x2_change=0
+   y2_change=0
 
    foodx = random.randint(20,dis_width-20) # Рандомизация положния яблока
    foody = random.randint(20,dis_height-20)
@@ -100,29 +111,35 @@ def gameLoop():# основная логики змей
                if event.key == pygame.K_a:
                    x1_change = -snake_block
                    y1_change = 0
-               # if event.key == pygame.K_HOME:
-               #      x1_change = -snake_block
-               #      y1_change = 0
                elif event.key == pygame.K_d:
                    x1_change = snake_block
                    y1_change = 0
-                # elif event.key == pygame.K_END:
-                #    x1_change = snake_block
-                #    y1_change = 0
+               elif event.key == pygame.K_s:
+                   x1_change = 0
+                   y1_change = snake_block
                elif event.key == pygame.K_w:
                    y1_change = -snake_block
                    x1_change = 0
-               # elif event.key == pygame.K_NumLk8:
+               # elif event.key == pygame.K_NumLk_8:
                #     y1_change = -snake_block
                #     x1_change = 0
-               # elif event.key == pygame.K_PAGEUP:
-               #     y1_change = -snake_block
-               #     x1_change = 0
+               elif event.key == pygame.K_UP:
+                   y2_change = -snake_block
+                   x2_change = 0
                elif event.key == pygame.K_DOWN:
-                   y1_change = snake_block
-                   x1_change = 0
+                   y2_change = snake_block
+                   x2_change = 0
+               elif event.key == pygame.K_LEFT:
+                   x2_change = -snake_block
+                   y2_change = 0
+               if event.key == pygame.K_RIGHT:
+                   x2_change = snake_block
+                   y2_change = 0
        if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:
            game_close = True
+       if x2 >= dis_width or x2 < 0 or y2 >= dis_height or y2 < 0:
+           game_close = True
+
        x1 += x1_change
        y1 += y1_change
        dis.fill(white)
@@ -131,8 +148,13 @@ def gameLoop():# основная логики змей
            foody = random.randint(20, dis_height - 90)
            len_of_snake+=1
        score((len_of_snake-1))
-
-
+       #score1((len_of_snake-1))
+       if foodx-10-len_of_snake1<x2<foodx+10+len_of_snake1 and foody-10-len_of_snake1<y2<foody+10+len_of_snake1:
+           foodx = random.randint(50, dis_width - 20)
+           foody = random.randint(20, dis_height - 90)
+           len_of_snake1+=1
+       score((len_of_snake1-5),300,10)
+       #score1((len_of_snake1 - 5), 300, 10)
        pygame.draw.rect(dis, blue, [foodx, foody, snake_block, snake_block])
        snakehead=[]
        snakehead.append(x1)
@@ -141,7 +163,9 @@ def gameLoop():# основная логики змей
        if len(snakelist)>len_of_snake:
         del snakelist[0]
        snake(snake_block,snakelist)
-
+       x2+=x2_change
+       y2+=y2_change
+       pygame.draw.circle(dis,(255,0,0),(x2,y2),len_of_snake1)
        pygame.draw.rect(dis, black, [x1, y1, snake_block, snake_block])
        pygame.display.update()
 
